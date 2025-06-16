@@ -1,66 +1,73 @@
-import requests
-import asyncio
-import aiohttp
-import json
-import zipfile
-from typing import Dict, List, Any, Tuple
-from collections import defaultdict
-from base64 import b64encode, b64decode
-from Crypto.Cipher import AES
-from Crypto.Util.Padding import pad, unpad
 import os
-import base64
-from pyrogram import Client, filters
 import sys
 import re
-import requests
+import time
 import uuid
+import json
 import random
-import string
+import base64
+import asyncio
+import aiohttp
 import hashlib
-from pyrogram.types.messages_and_media import message
-from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+import logging
+import zipfile
+import requests
+import string
+from typing import Dict, List, Any, Tuple
+from datetime import datetime
+from collections import defaultdict
+from base64 import b64encode, b64decode
+from concurrent.futures import ThreadPoolExecutor
+from Crypto.Cipher import AES
+from Crypto.Util.Padding import pad, unpad
+from pyrogram import Client, filters
+from pyrogram.types import (
+    Message, User, InlineKeyboardButton, 
+    InlineKeyboardMarkup, ChatMemberStatus
+)
 from pyrogram.errors import FloodWait
+from pyrogram.raw.functions.channels import GetParticipants
 from pyromod import listen
 from pyromod.exceptions.listener_timeout import ListenerTimeout
-from pyrogram.types import Message
-import pyrogram
-from pyrogram import Client, filters
-from pyrogram.types import User, Message
-from pyrogram.enums import ChatMemberStatus
-from pyrogram.raw.functions.channels import GetParticipants
 from config import api_id, api_hash, bot_token, auth_users
-from datetime import datetime
-import time
-from concurrent.futures import ThreadPoolExecutor
-THREADPOOL = ThreadPoolExecutor(max_workers=1000)
-   from flask import Flask
+
+# Flask App
+from flask import Flask
 app = Flask(__name__)
 
-  @app.route('/')
-  def home():
-      return "Hello, World!"
+@app.route('/')
+def home():
+    return "Hello, World!"
 
-  if __name__ == '__main__':
-      port = int(os.environ.get("PORT", 1000))  # Default to 1000 if PORT is not set
-      app.run(host='0.0.0.0', port=port)
-  
-import logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+if __name__ == '__main__':
+    port = int(os.environ.get("PORT", 1000))  # Default to 1000 if PORT is not set
+    app.run(host='0.0.0.0', port=port)
 
+# Logging Configuration
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
+
+# Image List
 image_list = [
-"https://graph.org/file/8b1f4146a8d6b43e5b2bc-be490579da043504d5.jpg",
-"https://graph.org/file/b75dab2b3f7eaff612391-282aa53538fd3198d4.jpg",
-"https://graph.org/file/38de0b45dd9144e524a33-0205892dd05593774b.jpg",
-"https://graph.org/file/be39f0eebb9b66d7d6bc9-59af2f46a4a8c510b7.jpg",
-"https://graph.org/file/8b7e3d10e362a2850ba0a-f7c7c46e9f4f50b10b.jpg",
+    "https://graph.org/file/8b1f4146a8d6b43e5b2bc-be490579da043504d5.jpg",
+    "https://graph.org/file/b75dab2b3f7eaff612391-282aa53538fd3198d4.jpg",
+    "https://graph.org/file/38de0b45dd9144e524a33-0205892dd05593774b.jpg",
+    "https://graph.org/file/be39f0eebb9b66d7d6bc9-59af2f46a4a8c510b7.jpg",
+    "https://graph.org/file/8b7e3d10e362a2850ba0a-f7c7c46e9f4f50b10b.jpg",
 ]
+
 print(4321)
+
+# Pyrogram Bot Client
+THREADPOOL = ThreadPoolExecutor(max_workers=1000)
 bot = Client(
     "bot",
     api_id=api_id,
     api_hash=api_hash,
-    bot_token=bot_token)
+    bot_token=bot_token
+)
 
 app.get('/', (req, res) => {
   res.send('Hello World!')
