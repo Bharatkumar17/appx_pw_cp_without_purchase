@@ -69,9 +69,16 @@ bot = Client(
     bot_token=bot_token
 )
 
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
+
+app = Flask(__name__)
+
+@app.route('/')  # डेकोरेटर का सही उपयोग
+def home():      # फंक्शन डेफिनिशन
+    return "Hello, World!"  # सीधे return करें
+
+if __name__ == '__main__':
+    port = int(os.environ.get("PORT", 1000))
+    app.run(host='0.0.0.0', port=port)
 # Flask app for Render
 app = Flask(__name__)
 
